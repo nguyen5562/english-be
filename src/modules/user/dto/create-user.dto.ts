@@ -1,5 +1,5 @@
 import { IsEmail, IsIn, IsNotEmpty, IsString } from 'class-validator';
-import { ROLE_SYSTEM } from '../../../const/role.const';
+import { ROLE_SYSTEM } from '../../../consts/role.const';
 
 export class CreateUserDto {
   @IsEmail()
