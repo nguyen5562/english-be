@@ -33,6 +33,10 @@ export class UserService {
     return newUser;
   }
 
+  async getAllUser(): Promise<User[]> {
+    return await this.userModel.find().select('-password');
+  }
+
   async getUserByEmail(email: string): Promise<User | null> {
     return await this.userModel.findOne({
       email: email,
