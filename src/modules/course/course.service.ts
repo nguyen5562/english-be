@@ -46,7 +46,7 @@ export class CourseService {
       $or: [{ name: updateCourseDto.name }, { code: updateCourseDto.code }],
     });
 
-    if (checkCourse)
+    if (checkCourse && checkCourse._id.toString() !== id)
       throw new BadRequestException('Tên khóa học hoặc mã khóa học đã tồn tại');
 
     const updatedCourse = await this.courseModel.findByIdAndUpdate(

@@ -1,0 +1,15 @@
+export enum QuestionType {
+  MULTIPLE_CHOICE = 'multiple-choice',
+  FILL_SENTENCE = 'fill-sentence',
+  LISTENING = 'listening',
+  WORD_ORDER = 'word-order',
+  WORD_BANK = 'word-bank',
+  PICTURE_CHOICE = 'picture-choice',
+  READING_MCQ = 'reading-mcq',
+  PRONUNCIATION = 'pronunciation',
+  WRITING = 'writing',
+  PARAGRAPH_FILL = 'paragraph-fill',
+  FILL_BLANK = 'fill-blank',
+  DROPDOWN_CHOICE = 'dropdown-choice',
+  VIDEO_RECORDING = 'video-recording',
+}

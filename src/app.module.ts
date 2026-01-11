@@ -8,6 +8,9 @@ import { databaseConfig } from './configs/env.config';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { CourseModule } from './modules/course/course.module';
+import { LessonModule } from './modules/lesson/lesson.module';
+import { ExerciseModule } from './modules/exercise/exercise.module';
+import { QuizModule } from './modules/quiz/quiz.module';
 
 @Module({
   imports: [
@@ -26,6 +29,9 @@ import { CourseModule } from './modules/course/course.module';
     AuthModule,
     UserModule,
     CourseModule,
+    LessonModule,
+    ExerciseModule,
+    QuizModule,
   ],
   controllers: [AppController],
   providers: [AppService],

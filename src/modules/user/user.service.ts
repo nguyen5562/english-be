@@ -7,9 +7,9 @@ import { User, UserDocument } from './schema/user.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
-import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Role } from 'src/enums/role.enum';
+import * as bcrypt from 'bcrypt';
+import { Role } from '../../enums/role.enum';
 
 @Injectable()
 export class UserService {
@@ -72,7 +72,7 @@ export class UserService {
 
   async getAllStudent(): Promise<User[]> {
     return await this.userModel
-      .find({ role: Role.Student })
+      .find({ role: Role.STUDENT })
       .select('-password');
   }
 }
