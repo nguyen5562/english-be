@@ -4,6 +4,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Min,
 } from 'class-validator';
 
 export class QuestionDto {
@@ -12,13 +13,17 @@ export class QuestionDto {
   title: string;
 
   @IsArray()
+  @IsString({ each: true })
   @IsOptional()
   options: string[];
 
+  @IsArray()
+  @IsString({ each: true })
   @IsOptional()
-  correctAnswer: string | string[];
+  correctAnswer: string[];
 
   @IsNumber()
+  @Min(0)
   @IsNotEmpty()
   point: number;
 
@@ -35,6 +40,7 @@ export class QuestionDto {
   imageUrl: string;
 
   @IsArray()
+  @IsString({ each: true })
   @IsOptional()
   wordBank: string[];
 }

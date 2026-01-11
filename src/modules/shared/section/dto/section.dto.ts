@@ -4,12 +4,14 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
 import { QuestionDto } from '../../question/dto/question.dto';
 import {
   SECTION_TYPE_SYSTEM,
   QUESTION_TYPE_SYSTEM,
 } from '../../../../consts/system.const';
+import { Type } from 'class-transformer';
 
 export class SectionDto {
   @IsString()
@@ -33,6 +35,7 @@ export class SectionDto {
   imageUrl: string;
 
   @IsArray()
+  @IsString({ each: true })
   @IsOptional()
   wordBank: string[];
 
@@ -51,6 +54,8 @@ export class SectionDto {
   questionType: string;
 
   @IsArray()
-  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => QuestionDto)
+  @IsOptional()
   questions: QuestionDto[];
 }

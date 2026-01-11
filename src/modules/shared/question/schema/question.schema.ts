@@ -8,25 +8,25 @@ export class Question {
   @Prop({ required: true })
   title: string;
 
-  @Prop()
+  @Prop({ type: [String], default: [] })
   options: string[];
 
-  // @Prop()
-  // correctAnswer: string | string[];
+  @Prop({ type: [String], default: [] })
+  correctAnswer: string[];
 
   @Prop({ required: true })
   point: number;
 
-  @Prop()
+  @Prop({ default: null })
   audioUrl: string;
 
-  @Prop()
+  @Prop({ default: null })
   videoUrl: string;
 
-  @Prop()
+  @Prop({ default: null })
   imageUrl: string;
 
-  @Prop()
+  @Prop({ type: [String], default: [] })
   wordBank: string[];
 }
 

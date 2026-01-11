@@ -12,22 +12,22 @@ export class Section {
   @Prop({ required: true })
   title: string;
 
-  @Prop()
+  @Prop({ default: null })
   description: string;
 
-  @Prop()
+  @Prop({ default: null })
   audioUrl: string;
 
-  @Prop()
+  @Prop({ default: null })
   videoUrl: string;
 
-  @Prop()
+  @Prop({ default: null })
   imageUrl: string;
 
-  @Prop()
+  @Prop({ type: [String], default: [] })
   wordBank: string[];
 
-  @Prop()
+  @Prop({ default: null })
   passage: string;
 
   @Prop({ required: true })

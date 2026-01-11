@@ -1,15 +1,17 @@
 import {
   IsArray,
+  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
-  IsUUID,
+  ValidateNested,
 } from 'class-validator';
-import { SectionDto } from '../../section/dto/section.dto';
+import { SectionDto } from '../../../modules/shared/section/dto/section.dto';
+import { Type } from 'class-transformer';
 
 export class CreateQuizDto {
-  @IsUUID()
+  @IsMongoId()
   @IsNotEmpty()
   courseId: string;
 
@@ -22,7 +24,9 @@ export class CreateQuizDto {
   description: string;
 
   @IsArray()
-  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => SectionDto)
+  @IsOptional()
   sections: SectionDto[];
 
   @IsNumber()

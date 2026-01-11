@@ -1,6 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { Section, SectionSchema } from '../../section/schema/section.schema';
+import {
+  Section,
+  SectionSchema,
+} from '../../../modules/shared/section/schema/section.schema';
 
 export type QuizDocument = Quiz & Document;
 
@@ -14,7 +17,7 @@ export class Quiz {
   @Prop({ required: true })
   title: string;
 
-  @Prop()
+  @Prop({ default: null })
   description: string;
 
   @Prop({ type: [SectionSchema], default: [] })
