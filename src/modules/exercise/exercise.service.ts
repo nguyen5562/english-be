@@ -55,6 +55,12 @@ export class ExerciseService {
     return exercises;
   }
 
+  async getById(id: string): Promise<Exercise> {
+    const exercise = await this.exerciseModel.findById(id);
+    if (!exercise) throw new NotFoundException('Exercise not found');
+    return exercise;
+  }
+
   // =======================
   // Section
   // =======================

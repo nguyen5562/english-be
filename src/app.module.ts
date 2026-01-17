@@ -11,6 +11,7 @@ import { CourseModule } from './modules/course/course.module';
 import { LessonModule } from './modules/lesson/lesson.module';
 import { ExerciseModule } from './modules/exercise/exercise.module';
 import { QuizModule } from './modules/quiz/quiz.module';
+import { ExerciseAttemptModule } from './modules/exercise-attempt/exercise-attempt.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { QuizModule } from './modules/quiz/quiz.module';
     LessonModule,
     ExerciseModule,
     QuizModule,
+    ExerciseAttemptModule,
   ],
   controllers: [AppController],
   providers: [AppService],
