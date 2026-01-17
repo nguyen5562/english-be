@@ -52,6 +52,12 @@ export class QuizService {
     return quizzes;
   }
 
+  async getById(id: string): Promise<Quiz> {
+    const quiz = await this.quizModel.findById(id);
+    if (!quiz) throw new NotFoundException('Không tìm thấy bài tập này');
+    return quiz;
+  }
+
   // =======================
   // Section
   // =======================

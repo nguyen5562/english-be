@@ -6,9 +6,9 @@ import {
 } from './schema/exercise-attempt.schema';
 import { Model, Types } from 'mongoose';
 import {
-  CreateExerciseAttemptDto,
+  ExerciseAttemptDto,
   SectionAttemptDto,
-} from './dto/create-exercise-attempt.dto';
+} from './dto/exercise-attempt.dto';
 import { ExerciseService } from '../exercise/exercise.service';
 import { AnswerDto } from '../shared/answer/dto/answer.dto';
 import { Question } from '../shared/question/schema/question.schema';
@@ -18,11 +18,12 @@ export class ExerciseAttemptService {
   constructor(
     @InjectModel(ExerciseAttempt.name)
     private readonly exerciseAttemptModel: Model<ExerciseAttemptDocument>,
+
     private readonly exerciseService: ExerciseService,
   ) {}
 
   async createExerciseAttempt(
-    createExerciseAttemptDto: CreateExerciseAttemptDto,
+    createExerciseAttemptDto: ExerciseAttemptDto,
   ): Promise<ExerciseAttempt> {
     const { exerciseId, userId } = createExerciseAttemptDto;
 
@@ -116,7 +117,7 @@ export class ExerciseAttemptService {
       if (!question) continue;
 
       if (this.isCorrect(question.correctAnswer ?? [], answer.answer ?? [])) {
-        score += question.point ?? 1;
+        score += question.point ?? 0;
       }
     }
 
@@ -126,10 +127,14 @@ export class ExerciseAttemptService {
   private isCorrect(correctAnswer: string[], userAnswer: string[]): boolean {
     if (correctAnswer.length !== userAnswer.length) return false;
 
-    const expected = [...correctAnswer].sort();
-    const actual = [...userAnswer].sort();
+    // strict order comparison
+    for (let i = 0; i < correctAnswer.length; i++) {
+      if (correctAnswer[i] !== userAnswer[i]) {
+        return false;
+      }
+    }
 
-    return expected.every((value, index) => value === actual[index]);
+    return true;
   }
 
   async getByExerciseId(exerciseId: string): Promise<ExerciseAttempt[]> {
@@ -144,7 +149,13 @@ export class ExerciseAttemptService {
     return attempts;
   }
 
-  async getUserAttemptsSummary(userId: string) {
+  async getById(id: string): Promise<ExerciseAttempt> {
+    const attempt = await this.exerciseAttemptModel.findById(id);
+    if (!attempt) throw new NotFoundException();
+    return attempt;
+  }
+
+  async getAttemptsSummaryByUserId(userId: string): Promise<ExerciseAttempt[]> {
     return this.exerciseAttemptModel.aggregate([
       {
         $match: {
@@ -158,6 +169,7 @@ export class ExerciseAttemptService {
         $group: {
           _id: '$_id', // 👈 attemptId
           exerciseId: { $first: '$exerciseId' },
+          userId: { $first: 'userId' },
           sections: {
             $push: {
               sectionId: '$sectionAttempts.sectionId',
@@ -172,6 +184,45 @@ export class ExerciseAttemptService {
           _id: 0,
           attemptId: '$_id',
           exerciseId: 1,
+          userId: 1,
+          sections: 1,
+        },
+      },
+    ]);
+  }
+
+  async getAttemptsSummaryByExerciseId(
+    exerciseId: string,
+  ): Promise<ExerciseAttempt[]> {
+    return this.exerciseAttemptModel.aggregate([
+      {
+        $match: {
+          exerciseId: new Types.ObjectId(exerciseId),
+        },
+      },
+      {
+        $unwind: '$sectionAttempts',
+      },
+      {
+        $group: {
+          _id: '$_id', // 👈 attemptId
+          exerciseId: { $first: '$exerciseId' },
+          userId: { $first: '$userId' },
+          sections: {
+            $push: {
+              sectionId: '$sectionAttempts.sectionId',
+              tries: '$sectionAttempts.tries',
+              score: '$sectionAttempts.score',
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          attemptId: '$_id',
+          exerciseId: 1,
+          userId: 1,
           sections: 1,
         },
       },

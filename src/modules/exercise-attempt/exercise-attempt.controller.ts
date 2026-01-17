@@ -8,9 +8,9 @@ import {
 } from '@nestjs/common';
 import { ExerciseAttemptService } from './exercise-attempt.service';
 import {
-  CreateExerciseAttemptDto,
+  ExerciseAttemptDto,
   SectionAttemptDto,
-} from './dto/create-exercise-attempt.dto';
+} from './dto/exercise-attempt.dto';
 
 @Controller('exercise-attempt')
 export class ExerciseAttemptController {
@@ -23,7 +23,7 @@ export class ExerciseAttemptController {
    * FE gọi khi user bắt đầu làm bài
    */
   @Post()
-  async create(@Body(ValidationPipe) dto: CreateExerciseAttemptDto) {
+  async create(@Body(ValidationPipe) dto: ExerciseAttemptDto) {
     return this.exerciseAttemptService.createExerciseAttempt(dto);
   }
 
@@ -43,18 +43,30 @@ export class ExerciseAttemptController {
    * Lấy danh sách tất cả attempt của user
    * Chỉ trả exerciseId + sectionId + tries + score
    */
-  @Get('myattempt/:userId')
-  async getMyAttempts(@Param('userId') userId: string) {
-    return this.exerciseAttemptService.getUserAttemptsSummary(userId);
+  @Get('user/:userId')
+  async getByUserId(@Param('userId') userId: string) {
+    return this.exerciseAttemptService.getAttemptsSummaryByUserId(userId);
   }
 
   @Get('exercise/:exerciseId')
   async getByExId(@Param('exerciseId') exerciseId: string) {
-    return this.exerciseAttemptService.getByExerciseId(exerciseId);
+    return this.exerciseAttemptService.getAttemptsSummaryByExerciseId(
+      exerciseId,
+    );
   }
 
-  @Get('user/:userId')
-  async getByUserId(@Param('userId') userId: string) {
-    return this.exerciseAttemptService.getByUserId(userId);
+  @Get(':id')
+  async getById(@Param('id') id: string) {
+    return this.exerciseAttemptService.getById(id);
   }
+
+  // @Get('exercise/:exerciseId')
+  // async getByExId(@Param('exerciseId') exerciseId: string) {
+  //   return this.exerciseAttemptService.getByExerciseId(exerciseId);
+  // }
+
+  // @Get('user/:userId')
+  // async getByUserId(@Param('userId') userId: string) {
+  //   return this.exerciseAttemptService.getByUserId(userId);
+  // }
 }

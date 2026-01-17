@@ -5,26 +5,22 @@ import {
   IsNotEmpty,
   ValidateNested,
 } from 'class-validator';
-import { AnswerDto } from 'src/modules/shared/answer/dto/answer.dto';
+import { AnswerDto } from '../../../modules/shared/answer/dto/answer.dto';
 
-export class SectionAttemptDto {
+export class QuizAttemptDto {
   @IsMongoId()
   @IsNotEmpty()
-  sectionId: string;
+  quizId: string;
 
+  @IsMongoId()
+  @IsNotEmpty()
+  userId: string;
+}
+
+export class SubmitAttemptDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => AnswerDto)
   @IsNotEmpty()
   answers: AnswerDto[];
-}
-
-export class CreateExerciseAttemptDto {
-  @IsMongoId()
-  @IsNotEmpty()
-  exerciseId: string;
-
-  @IsMongoId()
-  @IsNotEmpty()
-  userId: string;
 }
