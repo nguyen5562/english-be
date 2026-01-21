@@ -57,7 +57,7 @@ export class ExerciseService {
 
   async getById(id: string): Promise<Exercise> {
     const exercise = await this.exerciseModel.findById(id);
-    if (!exercise) throw new NotFoundException('Exercise not found');
+    if (!exercise) throw new NotFoundException('Không tìm thấy bài tập này');
     return exercise;
   }
 
