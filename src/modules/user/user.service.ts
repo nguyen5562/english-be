@@ -64,6 +64,12 @@ export class UserService {
     return await this.userModel.find().select('-password');
   }
 
+  async getUserById(id: string): Promise<User> {
+    const user = await this.userModel.findById(id).select('-password');
+    if (!user) throw new NotFoundException('Không tìm thấy người dùng');
+    return user;
+  }
+
   async getUserByEmail(email: string): Promise<User | null> {
     return await this.userModel.findOne({
       email: email,

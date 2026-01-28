@@ -40,6 +40,11 @@ export class QuizController {
     return this.quizService.deleteQuiz(id);
   }
 
+  @Get(':id')
+  async getById(@Param('id') id: string) {
+    return this.quizService.getById(id);
+  }
+
   @Get()
   async getAll() {
     return this.quizService.getAll();

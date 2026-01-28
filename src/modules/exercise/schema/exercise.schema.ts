@@ -18,7 +18,7 @@ export class Exercise {
   title: string;
 
   @Prop({ default: null })
-  description?: string;
+  description: string;
 
   @Prop({ type: [SectionSchema], default: [] })
   sections: Section[];

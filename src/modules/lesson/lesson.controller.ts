@@ -98,9 +98,14 @@ export class LessonController {
     return this.lessonService.removeReference(id, referenceId);
   }
 
-  @Get(':courseId')
+  @Get('/course/:courseId')
   async getLessonByCourseId(@Param('courseId') courseId: string) {
     return this.lessonService.getLessonByCoureId(courseId);
+  }
+
+  @Get(':id')
+  async getLessonById(@Param('id') id: string) {
+    return await this.lessonService.getLessonById(id);
   }
 
   @Get()

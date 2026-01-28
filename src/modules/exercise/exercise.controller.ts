@@ -47,6 +47,11 @@ export class ExerciseController {
     return this.exerciseService.getAll();
   }
 
+  @Get(':id')
+  async getById(@Param('id') id: string) {
+    return this.exerciseService.getById(id);
+  }
+
   // =======================
   // Section
   // =======================

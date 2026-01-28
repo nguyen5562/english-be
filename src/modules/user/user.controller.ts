@@ -33,6 +33,11 @@ export class UserController {
     return this.userService.getAllUser();
   }
 
+  @Get(':id')
+  async getUserById(@Param('id') id: string) {
+    return this.userService.getUserById(id);
+  }
+
   @Get('student')
   async getAllStudent() {
     return this.userService.getAllStudent();

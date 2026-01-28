@@ -1,4 +1,5 @@
-import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsIn, IsOptional, IsString } from 'class-validator';
+import { ROLE_SYSTEM } from '../../../consts/system.const';
 
 export class UpdateUserDto {
   @IsEmail()
@@ -11,5 +12,6 @@ export class UpdateUserDto {
 
   @IsString()
   @IsOptional()
-  password?: string;
+  @IsIn(ROLE_SYSTEM)
+  role?: string;
 }
