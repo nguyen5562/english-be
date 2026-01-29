@@ -152,10 +152,10 @@ export class LessonService {
   }
 
   async getLessonByCoureId(courseId: string): Promise<Lesson[]> {
-    const lessons = await this.lessonModel.find({ courseId: courseId });
+    const lessons = await this.lessonModel.find({
+      courseId: new Types.ObjectId(courseId),
+    });
 
-    if (!lessons || lessons.length === 0)
-      throw new NotFoundException('Không tìm thấy bài học của khóa học này');
     return lessons;
   }
 

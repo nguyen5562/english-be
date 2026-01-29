@@ -44,15 +44,15 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.TEACHER)
-  @Get(':id')
-  async getUserById(@Param('id') id: string) {
-    return this.userService.getUserById(id);
+  @Get('student')
+  async getAllStudent() {
+    return this.userService.getAllStudent();
   }
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.TEACHER)
-  @Get('student')
-  async getAllStudent() {
-    return this.userService.getAllStudent();
+  @Get(':id')
+  async getUserById(@Param('id') id: string) {
+    return this.userService.getUserById(id);
   }
 }
