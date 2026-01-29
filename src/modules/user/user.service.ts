@@ -41,6 +41,7 @@ export class UserService {
 
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const checkUser = await this.userModel.findOne({
+      _id: { $ne: id },
       $or: [
         { email: updateUserDto.email },
         { username: updateUserDto.username },
@@ -80,5 +81,23 @@ export class UserService {
     return await this.userModel
       .find({ role: Role.STUDENT })
       .select('-password');
+  }
+
+  async changePassword(
+    id: string,
+    oldPassword: string,
+    newPassword: string,
+  ): Promise<void> {
+    const user = await this.userModel.findById(id);
+    if (!user) throw new NotFoundException('Không tìm thấy người dùng');
+
+    const checkPass = await bcrypt.compare(oldPassword, user.password);
+    if (!checkPass) throw new BadRequestException('Mật khẩu cũ không đúng');
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    user.password = hashedPassword;
+    await user.save();
   }
 }

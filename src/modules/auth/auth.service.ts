@@ -6,6 +6,7 @@ import { JwtPayload } from '../../interfaces/jwt-payload.interface';
 import { RegisterDto } from './dto/register.dto';
 import { User } from '../user/schema/user.schema';
 import { CreateUserDto } from '../user/dto/create-user.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -47,5 +48,13 @@ export class AuthService {
     };
 
     return this.userService.createUser(createUserDto);
+  }
+
+  async changePassword(id: string, dto: ChangePasswordDto): Promise<void> {
+    return this.userService.changePassword(
+      id,
+      dto.oldPassword,
+      dto.newPassword,
+    );
   }
 }

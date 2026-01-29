@@ -11,6 +11,7 @@ import { AuthService } from './auth.service';
 import { LocalAuthGuard } from '../../guards/local-auth.guard';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { RegisterDto } from './dto/register.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -25,6 +26,16 @@ export class AuthController {
   @Post('register')
   async register(@Body(ValidationPipe) dto: RegisterDto) {
     return await this.authService.register(dto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('change-password')
+  async changePassword(
+    @Request() req,
+    @Body(ValidationPipe) dto: ChangePasswordDto,
+  ) {
+    const userId = req.user.userId;
+    return this.authService.changePassword(userId, dto);
   }
 
   @UseGuards(JwtAuthGuard)
