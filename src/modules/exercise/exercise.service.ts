@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Exercise, ExerciseDocument } from './schema/exercise.schema';
 import { Model, Types } from 'mongoose';
@@ -22,6 +26,11 @@ export class ExerciseService {
   async createExercise(
     createExerciseDto: CreateExerciseDto,
   ): Promise<Exercise> {
+    const existed = await this.exerciseModel.findOne({
+      title: createExerciseDto.title,
+    });
+    if (existed) throw new BadRequestException('Tiêu đề bài tập đã tồn tại');
+
     const newExercise = await this.exerciseModel.create({
       ...createExerciseDto,
       courseId: new Types.ObjectId(createExerciseDto.courseId),
@@ -33,6 +42,12 @@ export class ExerciseService {
     id: string,
     updateExerciseDto: UpdateExerciseDto,
   ): Promise<Exercise> {
+    const existed = await this.exerciseModel.exists({
+      _id: { $ne: id },
+      title: updateExerciseDto.title,
+    });
+    if (existed) throw new BadRequestException('Tiêu đề bài tập đã tồn tại');
+
     const updatedExercise = await this.exerciseModel.findByIdAndUpdate(
       id,
       updateExerciseDto,
@@ -66,6 +81,14 @@ export class ExerciseService {
   // =======================
 
   async addSection(id: string, section: SectionDto): Promise<Exercise> {
+    const existed = await this.exerciseModel.exists({
+      _id: id,
+      'sections.title': section.title,
+    });
+    if (existed) {
+      throw new BadRequestException('Tiêu đề section đã tồn tại');
+    }
+
     const exercise = await this.exerciseModel.findByIdAndUpdate(
       id,
       { $push: { sections: section } },
@@ -80,6 +103,19 @@ export class ExerciseService {
     sectionId: string,
     section: SectionDto,
   ): Promise<Exercise> {
+    const existed = await this.exerciseModel.exists({
+      _id: id,
+      sections: {
+        $elemMatch: {
+          _id: { $ne: sectionId },
+          title: section.title,
+        },
+      },
+    });
+    if (existed) {
+      throw new BadRequestException('Tiêu đề section đã tồn tại');
+    }
+
     const set = buildSet('sections.$.', section);
 
     const exercise = await this.exerciseModel.findOneAndUpdate(

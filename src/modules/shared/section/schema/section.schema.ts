@@ -9,7 +9,7 @@ import {
 export class Section {
   _id: Types.ObjectId;
 
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   title: string;
 
   @Prop({ default: null })

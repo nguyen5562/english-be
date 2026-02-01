@@ -14,7 +14,7 @@ export class Quiz {
   @Prop({ type: Types.ObjectId, ref: 'Course', required: true })
   courseId: Types.ObjectId;
 
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   title: string;
 
   @Prop({ default: null })

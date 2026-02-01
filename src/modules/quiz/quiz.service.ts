@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Quiz, QuizDocument } from './schema/quiz.schema';
 import { Model, Types } from 'mongoose';
@@ -20,6 +24,11 @@ export class QuizService {
   // =======================
 
   async createQuiz(createQuizDto: CreateQuizDto): Promise<Quiz> {
+    const existed = await this.quizModel.findOne({
+      title: createQuizDto.title,
+    });
+    if (existed) throw new BadRequestException('Tiêu đề bài tập đã tồn tại');
+
     const newQuiz = await this.quizModel.create({
       ...createQuizDto,
       courseId: new Types.ObjectId(createQuizDto.courseId),
@@ -28,6 +37,12 @@ export class QuizService {
   }
 
   async updateQuiz(id: string, updateQuizDto: UpdateQuizDto): Promise<Quiz> {
+    const existed = await this.quizModel.exists({
+      _id: { $ne: id },
+      title: updateQuizDto.title,
+    });
+    if (existed) throw new BadRequestException('Tiêu đề bài tập đã tồn tại');
+
     const updatedQuiz = await this.quizModel.findByIdAndUpdate(
       id,
       updateQuizDto,
@@ -63,6 +78,14 @@ export class QuizService {
   // =======================
 
   async addSection(id: string, section: SectionDto): Promise<Quiz> {
+    const existed = await this.quizModel.exists({
+      _id: id,
+      'sections.title': section.title,
+    });
+    if (existed) {
+      throw new BadRequestException('Tiêu đề section đã tồn tại');
+    }
+
     const quiz = await this.quizModel.findByIdAndUpdate(
       id,
       { $push: { sections: section } },
@@ -77,6 +100,19 @@ export class QuizService {
     sectionId: string,
     section: SectionDto,
   ): Promise<Quiz> {
+    const existed = await this.quizModel.exists({
+      _id: id,
+      sections: {
+        $elemMatch: {
+          _id: { $ne: sectionId },
+          title: section.title,
+        },
+      },
+    });
+    if (existed) {
+      throw new BadRequestException('Tiêu đề section đã tồn tại');
+    }
+
     const set = buildSet('sections.$.', section);
 
     const quiz = await this.quizModel.findOneAndUpdate(
