@@ -61,9 +61,6 @@ export class QuizService {
 
   async getAll(): Promise<Quiz[]> {
     const quizzes = await this.quizModel.find();
-
-    if (!quizzes || quizzes.length === 0)
-      throw new NotFoundException('Không tìm thấy bài kiểm tra nào');
     return quizzes;
   }
 

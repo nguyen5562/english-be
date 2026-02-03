@@ -64,9 +64,6 @@ export class ExerciseService {
 
   async getAll(): Promise<Exercise[]> {
     const exercises = await this.exerciseModel.find();
-
-    if (!exercises || exercises.length === 0)
-      throw new NotFoundException('Không tìm thấy bài tập nào');
     return exercises;
   }
 
