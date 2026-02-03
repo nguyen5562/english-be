@@ -27,7 +27,7 @@ export class QuizService {
     const existed = await this.quizModel.findOne({
       title: createQuizDto.title,
     });
-    if (existed) throw new BadRequestException('Tiêu đề bài tập đã tồn tại');
+    if (existed) throw new BadRequestException('Tiêu đề quiz đã tồn tại');
 
     const newQuiz = await this.quizModel.create({
       ...createQuizDto,
@@ -41,7 +41,7 @@ export class QuizService {
       _id: { $ne: id },
       title: updateQuizDto.title,
     });
-    if (existed) throw new BadRequestException('Tiêu đề bài tập đã tồn tại');
+    if (existed) throw new BadRequestException('Tiêu đề quiz đã tồn tại');
 
     const updatedQuiz = await this.quizModel.findByIdAndUpdate(
       id,
@@ -78,13 +78,13 @@ export class QuizService {
   // =======================
 
   async addSection(id: string, section: SectionDto): Promise<Quiz> {
-    const existed = await this.quizModel.exists({
-      _id: id,
-      'sections.title': section.title,
-    });
-    if (existed) {
-      throw new BadRequestException('Tiêu đề section đã tồn tại');
-    }
+    // const existed = await this.quizModel.exists({
+    //   _id: id,
+    //   'sections.title': section.title,
+    // });
+    // if (existed) {
+    //   throw new BadRequestException('Tiêu đề section đã tồn tại');
+    // }
 
     const quiz = await this.quizModel.findByIdAndUpdate(
       id,
@@ -100,18 +100,18 @@ export class QuizService {
     sectionId: string,
     section: SectionDto,
   ): Promise<Quiz> {
-    const existed = await this.quizModel.exists({
-      _id: id,
-      sections: {
-        $elemMatch: {
-          _id: { $ne: sectionId },
-          title: section.title,
-        },
-      },
-    });
-    if (existed) {
-      throw new BadRequestException('Tiêu đề section đã tồn tại');
-    }
+    // const existed = await this.quizModel.exists({
+    //   _id: id,
+    //   sections: {
+    //     $elemMatch: {
+    //       _id: { $ne: sectionId },
+    //       title: section.title,
+    //     },
+    //   },
+    // });
+    // if (existed) {
+    //   throw new BadRequestException('Tiêu đề section đã tồn tại');
+    // }
 
     const set = buildSet('sections.$.', section);
 

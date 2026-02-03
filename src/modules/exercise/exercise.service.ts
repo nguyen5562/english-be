@@ -81,13 +81,13 @@ export class ExerciseService {
   // =======================
 
   async addSection(id: string, section: SectionDto): Promise<Exercise> {
-    const existed = await this.exerciseModel.exists({
-      _id: id,
-      'sections.title': section.title,
-    });
-    if (existed) {
-      throw new BadRequestException('Tiêu đề section đã tồn tại');
-    }
+    // const existed = await this.exerciseModel.exists({
+    //   _id: id,
+    //   'sections.title': section.title,
+    // });
+    // if (existed) {
+    //   throw new BadRequestException('Tiêu đề section đã tồn tại');
+    // }
 
     const exercise = await this.exerciseModel.findByIdAndUpdate(
       id,
@@ -103,18 +103,18 @@ export class ExerciseService {
     sectionId: string,
     section: SectionDto,
   ): Promise<Exercise> {
-    const existed = await this.exerciseModel.exists({
-      _id: id,
-      sections: {
-        $elemMatch: {
-          _id: { $ne: sectionId },
-          title: section.title,
-        },
-      },
-    });
-    if (existed) {
-      throw new BadRequestException('Tiêu đề section đã tồn tại');
-    }
+    // const existed = await this.exerciseModel.exists({
+    //   _id: id,
+    //   sections: {
+    //     $elemMatch: {
+    //       _id: { $ne: sectionId },
+    //       title: section.title,
+    //     },
+    //   },
+    // });
+    // if (existed) {
+    //   throw new BadRequestException('Tiêu đề section đã tồn tại');
+    // }
 
     const set = buildSet('sections.$.', section);
 
