@@ -87,11 +87,13 @@ export class ExerciseAttemptService {
         tries: 1,
         score: sectionScore,
         answers: storedAnswers,
+        submittedAt: new Date(),
       });
     } else {
       sectionAttempt.tries += 1;
       sectionAttempt.score = sectionScore;
       sectionAttempt.answers = storedAnswers;
+      sectionAttempt.submittedAt = new Date();
     }
 
     attempt.totalScore = attempt.sectionAttempts.reduce(

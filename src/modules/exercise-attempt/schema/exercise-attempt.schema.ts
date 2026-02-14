@@ -21,6 +21,9 @@ export class SectionAttempt {
 
   @Prop({ type: [AnswerSchema], default: [] })
   answers: Answer[];
+
+  @Prop({ default: Date.now })
+  submittedAt: Date;
 }
 
 export const SectionAttemptSchema =

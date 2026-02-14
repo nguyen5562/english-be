@@ -150,7 +150,7 @@ export class QuizAttemptService {
     return attempt;
   }
 
-  async getAttemptsSummaryByUserId(userId: string): Promise<any[]> {
+  async getAttemptsSummaryByUserId(userId: string): Promise<QuizAttempt[]> {
     return this.quizAttemptModel.aggregate([
       {
         $match: {
@@ -159,11 +159,12 @@ export class QuizAttemptService {
       },
       {
         $project: {
-          _id: 0,
+          _id: 1,
           attemptId: '$_id',
           quizId: 1,
           userId: 1,
           status: 1,
+          answers: 1,
           totalScore: 1,
           startedAt: 1,
           submittedAt: 1,
@@ -182,7 +183,7 @@ export class QuizAttemptService {
     ]);
   }
 
-  async getAttemptsSummaryByQuizId(quizId: string): Promise<any[]> {
+  async getAttemptsSummaryByQuizId(quizId: string): Promise<QuizAttempt[]> {
     return this.quizAttemptModel.aggregate([
       {
         $match: {
@@ -191,11 +192,12 @@ export class QuizAttemptService {
       },
       {
         $project: {
-          _id: 0,
+          _id: 1,
           attemptId: '$_id',
           quizId: 1,
           userId: 1,
           status: 1,
+          answers: 1,
           totalScore: 1,
           startedAt: 1,
           submittedAt: 1,
