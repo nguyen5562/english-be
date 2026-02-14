@@ -156,36 +156,17 @@ export class ExerciseAttemptService {
   }
 
   async getAttemptsSummaryByUserId(userId: string): Promise<ExerciseAttempt[]> {
-    return this.exerciseAttemptModel.aggregate([
+    return this.exerciseAttemptModel.aggregate<ExerciseAttempt>([
       {
-        $match: {
-          userId: new Types.ObjectId(userId),
-        },
-      },
-      {
-        $unwind: '$sectionAttempts',
-      },
-      {
-        $group: {
-          _id: '$_id', // 👈 attemptId
-          exerciseId: { $first: '$exerciseId' },
-          userId: { $first: 'userId' },
-          sections: {
-            $push: {
-              sectionId: '$sectionAttempts.sectionId',
-              tries: '$sectionAttempts.tries',
-              score: '$sectionAttempts.score',
-            },
-          },
-        },
+        $match: { userId: new Types.ObjectId(userId) },
       },
       {
         $project: {
-          _id: 0,
-          attemptId: '$_id',
+          _id: 1,
           exerciseId: 1,
           userId: 1,
-          sections: 1,
+          sectionAttempts: 1,
+          totalScore: 1,
         },
       },
     ]);
@@ -201,29 +182,12 @@ export class ExerciseAttemptService {
         },
       },
       {
-        $unwind: '$sectionAttempts',
-      },
-      {
-        $group: {
-          _id: '$_id', // 👈 attemptId
-          exerciseId: { $first: '$exerciseId' },
-          userId: { $first: '$userId' },
-          sections: {
-            $push: {
-              sectionId: '$sectionAttempts.sectionId',
-              tries: '$sectionAttempts.tries',
-              score: '$sectionAttempts.score',
-            },
-          },
-        },
-      },
-      {
         $project: {
-          _id: 0,
-          attemptId: '$_id',
+          _id: 1,
           exerciseId: 1,
           userId: 1,
-          sections: 1,
+          sectionAttempts: 1,
+          totalScore: 1,
         },
       },
     ]);
