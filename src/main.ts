@@ -20,7 +20,7 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: 'http://localhost:5173',
+    origin: 'http://localhost:5173, https://english-fe-one.vercel.app/',
     credentials: true,
   });
 
