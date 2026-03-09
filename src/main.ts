@@ -20,15 +20,17 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: 'http://localhost:5173',
-    // origin: 'https://english-fe-one.vercel.app',
+    origin: [
+      'http://165.245.180.171:5173',
+      'http://localhost:5173'
+    ],
     credentials: true,
   });
 
   app.useStaticAssets(FILE_ROOT, { prefix: '/resources' });
 
-  app.use(json({ limit: '50mb', type: ['application/json', 'text/plain'] }));
-  app.use(urlencoded({ extended: true, limit: '50mb' }));
+  app.use(json({ limit: '100mb', type: ['application/json', 'text/plain'] }));
+  app.use(urlencoded({ extended: true, limit: '100mb' }));
 
   const port = appConfig.port;
   await app.listen(port);

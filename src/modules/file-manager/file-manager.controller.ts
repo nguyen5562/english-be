@@ -7,11 +7,13 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
+import express from 'express';
 import { ensureExt, FileManagerService } from './file-manager.service';
 
 @Controller('file-manager')
@@ -25,9 +27,17 @@ export class FileManagerController {
   }
 
   // GET /files/{id} :contentReference[oaicite:3]{index=3}
+  // @Get('files/*id')
+  //   listFolder(@Param('id') id: string, @Query('text') text?: string) {
+  //   return id;
+  //   return this.svc.list(id, text);
+  // }
+
   @Get('files/*id')
-  listFolder(@Param('id') id: string, @Query('text') text?: string) {
-    return this.svc.list(id, text);
+  listFolder(@Param() params: Record<string, any>, @Query('text') text?: string) {
+    const raw = params.id;
+    const normalized = Array.isArray(raw) ? raw.join('/') : raw;
+    return this.svc.list('/' + normalized, text);
   }
 
   // POST /files/{id} create in folder :contentReference[oaicite:4]{index=4}
@@ -50,7 +60,7 @@ export class FileManagerController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: memoryStorage(),
-      limits: { fileSize: 50 * 1024 * 1024 },
+      limits: { fileSize: 100 * 1024 * 1024 },
     }),
   )
   upload(

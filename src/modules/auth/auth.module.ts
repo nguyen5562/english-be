@@ -13,7 +13,7 @@ import { JwtStrategy } from '../../strategies/jwt.strategy';
     JwtModule.registerAsync({
       useFactory: () => ({
         secret: appConfig.jwtSecret,
-        signOptions: { expiresIn: '1h' },
+        signOptions: { expiresIn: '12h' },
       }),
     }),
     PassportModule,
