@@ -12,4 +12,5 @@ export enum QuestionType {
   FILL_BLANK = 'fill-blank',
   DROPDOWN_CHOICE = 'dropdown-choice',
   VIDEO_RECORDING = 'video-recording',
+  DRAG_CLASSIFY = 'drag-classify',
 }
