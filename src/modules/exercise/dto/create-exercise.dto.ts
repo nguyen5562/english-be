@@ -14,6 +14,10 @@ export class CreateExerciseDto {
   @IsNotEmpty()
   courseId: string;
 
+  @IsMongoId()
+  @IsOptional()
+  unitId?: string;
+
   @IsString()
   @IsNotEmpty()
   title: string;

@@ -14,6 +14,9 @@ export class Exercise {
   @Prop({ type: Types.ObjectId, ref: 'Course', required: true })
   courseId: Types.ObjectId;
 
+  @Prop({ type: Types.ObjectId, ref: 'Unit', required: false, default: null })
+  unitId?: Types.ObjectId;
+
   @Prop({ required: true, unique: true })
   title: string;
 

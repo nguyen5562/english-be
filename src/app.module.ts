@@ -14,6 +14,7 @@ import { QuizModule } from './modules/quiz/quiz.module';
 import { ExerciseAttemptModule } from './modules/exercise-attempt/exercise-attempt.module';
 import { QuizAttemptModule } from './modules/quiz-attempt/quiz-attempt.module';
 import { FileManagerModule } from './modules/file-manager/file-manager.module';
+import { UnitModule } from './modules/unit/unit.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { FileManagerModule } from './modules/file-manager/file-manager.module';
     ExerciseAttemptModule,
     QuizAttemptModule,
     FileManagerModule,
+    UnitModule,
   ],
   controllers: [AppController],
   providers: [AppService],

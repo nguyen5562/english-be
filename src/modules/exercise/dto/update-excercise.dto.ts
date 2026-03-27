@@ -5,6 +5,10 @@ export class UpdateExerciseDto {
   @IsOptional()
   courseId: string;
 
+  @IsMongoId()
+  @IsOptional()
+  unitId?: string;
+
   @IsString()
   @IsOptional()
   title: string;
