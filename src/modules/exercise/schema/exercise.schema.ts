@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import * as mongoose from 'mongoose';
 import { Document, Types } from 'mongoose';
 import {
   SectionSchema,
@@ -11,10 +12,10 @@ export type ExerciseDocument = Exercise & Document;
 export class Exercise {
   _id: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'Course', required: true })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true })
   courseId: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'Unit', required: false, default: null })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: false, default: null })
   unitId?: Types.ObjectId;
 
   @Prop({ required: true, unique: true })
