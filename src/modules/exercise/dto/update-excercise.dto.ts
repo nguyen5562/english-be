@@ -1,4 +1,4 @@
-import { IsMongoId, IsOptional, IsString } from 'class-validator';
+import { IsMongoId, IsOptional, IsString, IsNumber } from 'class-validator';
 
 export class UpdateExerciseDto {
   @IsMongoId()
@@ -16,4 +16,8 @@ export class UpdateExerciseDto {
   @IsString()
   @IsOptional()
   description: string;
+
+  @IsNumber()
+  @IsOptional()
+  order?: number;
 }

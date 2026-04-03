@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsNumber,
   ValidateNested,
 } from 'class-validator';
 import { SectionDto } from '../../../modules/shared/section/dto/section.dto';
@@ -25,6 +26,10 @@ export class CreateExerciseDto {
   @IsString()
   @IsOptional()
   description: string;
+
+  @IsNumber()
+  @IsOptional()
+  order?: number;
 
   @IsArray()
   @ValidateNested({ each: true })

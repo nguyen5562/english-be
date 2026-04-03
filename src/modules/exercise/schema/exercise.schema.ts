@@ -24,6 +24,9 @@ export class Exercise {
   @Prop({ default: null })
   description: string;
 
+  @Prop({ default: 0 })
+  order: number;
+
   @Prop({ type: [SectionSchema], default: [] })
   sections: Section[];
 }
