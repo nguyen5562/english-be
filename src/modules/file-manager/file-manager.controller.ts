@@ -43,10 +43,12 @@ export class FileManagerController {
   // POST /files/{id} create in folder :contentReference[oaicite:4]{index=4}
   @Post('files/*id')
   createInFolder(
-    @Param('id') id: string,
+    @Param() params: Record<string, any>,
     @Body() body: { name: string; type: 'file' | 'folder' },
   ) {
-    return this.svc.create(id, body.name, body.type);
+    const raw = params.id || params['0'];
+    const normalized = Array.isArray(raw) ? raw.join('/') : raw;
+    return this.svc.create('/' + normalized, body.name, body.type);
   }
 
   // (fallback) POST /files create in root (để chắc chắn không bị vướng root id)
@@ -80,10 +82,12 @@ export class FileManagerController {
   // PUT /files/{id} rename :contentReference[oaicite:6]{index=6}
   @Put('files/*id')
   rename(
-    @Param('id') id: string,
+    @Param() params: Record<string, any>,
     @Body() body: { operation: 'rename'; name: string },
   ) {
-    return this.svc.rename(id, body.name);
+    const raw = params.id || params['0'];
+    const normalized = Array.isArray(raw) ? raw.join('/') : raw;
+    return this.svc.rename('/' + normalized, body.name);
   }
 
   // PUT /files move/copy :contentReference[oaicite:7]{index=7}
@@ -107,7 +111,9 @@ export class FileManagerController {
   }
 
   @Get('info/*id')
-  infoFolder(@Param('id') id: string) {
-    return this.svc.infoFolder(id);
+  infoFolder(@Param() params: Record<string, any>) {
+    const raw = params.id || params['0'];
+    const normalized = Array.isArray(raw) ? raw.join('/') : raw;
+    return this.svc.infoFolder('/' + normalized);
   }
 }
