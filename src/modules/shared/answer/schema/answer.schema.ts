@@ -8,6 +8,12 @@ export class Answer {
 
   @Prop({ type: [String], default: [] })
   answer: string[];
+
+  @Prop({ required: false })
+  teacherScore?: number;
+
+  @Prop({ required: false })
+  teacherFeedback?: string;
 }
 
 export const AnswerSchema = SchemaFactory.createForClass(Answer);

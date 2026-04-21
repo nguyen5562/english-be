@@ -4,11 +4,13 @@ import {
   Get,
   Param,
   Post,
+  Patch,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { QuizAttemptService } from './quiz-attempt.service';
 import { QuizAttemptDto, SubmitAttemptDto } from './dto/quiz-attempt.dto';
+import { ManualGradeDto } from '../shared/answer/dto/grade.dto';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { Roles } from '../../decorators/role.decorator';
 import { Role } from '../../enums/role.enum';
@@ -32,6 +34,15 @@ export class QuizAttemptController {
     @Body(ValidationPipe) dto: SubmitAttemptDto,
   ) {
     return this.quizAttemptService.submitQuiz(attemptId, dto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/grade')
+  async manualGrade(
+    @Param('id') id: string,
+    @Body(new ValidationPipe({ transform: true })) dto: ManualGradeDto,
+  ) {
+    return this.quizAttemptService.manualGrade(id, dto);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -132,6 +132,45 @@ export class QuizAttemptService {
     return true;
   }
 
+  async manualGrade(attemptId: string, manualGradeDto: import('../shared/answer/dto/grade.dto').ManualGradeDto): Promise<QuizAttempt> {
+    const attempt = await this.quizAttemptModel.findById(attemptId);
+    if (!attempt) throw new NotFoundException('Không tìm thấy bài làm quiz');
+
+    const quiz = await this.quizService.getById(attempt.quizId.toString());
+    const allQuestions = (quiz.sections ?? []).flatMap((section: any) => section.questions ?? []);
+    const questionMap = new Map(allQuestions.map((q: any) => [q._id.toString(), q]));
+
+    const gradeMap = new Map(manualGradeDto.grades.map((g: any) => [g.questionId.toString(), g]));
+
+    let totalScore = 0;
+
+    attempt.answers.forEach((answer) => {
+      const qId = answer.questionId.toString();
+      const grade = gradeMap.get(qId);
+      
+      if (grade) {
+        answer.teacherScore = grade.score;
+        answer.teacherFeedback = grade.feedback;
+      }
+
+      if (answer.teacherScore !== undefined) {
+        totalScore += answer.teacherScore;
+      } else {
+        const question = questionMap.get(qId);
+        if (question && this.isCorrect(question.correctAnswer ?? [], answer.answer ?? [])) {
+          totalScore += question.point ?? 0;
+        }
+      }
+    });
+
+    attempt.totalScore = totalScore;
+    const attemptDoc = attempt as any;
+    attemptDoc.markModified('answers');
+
+    await attempt.save();
+    return attempt;
+  }
+
   async getByQuizId(quizId: string): Promise<QuizAttempt[]> {
     const attempts = await this.quizAttemptModel
       .find({ quizId })

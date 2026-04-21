@@ -139,6 +139,51 @@ export class ExerciseAttemptService {
     return true;
   }
 
+  async manualGrade(attemptId: string, manualGradeDto: import('../shared/answer/dto/grade.dto').ManualGradeDto): Promise<ExerciseAttempt> {
+    const attempt = await this.exerciseAttemptModel.findById(attemptId);
+    if (!attempt) throw new NotFoundException('Không tìm thấy attempt');
+
+    const exercise = await this.exerciseService.getById(attempt.exerciseId.toString());
+
+    const gradeMap = new Map(manualGradeDto.grades.map(g => [g.questionId.toString(), g]));
+
+    attempt.sectionAttempts.forEach((sectionAttempt) => {
+      const section = exercise.sections.find(s => s._id.toString() === sectionAttempt.sectionId.toString());
+      if (!section) return;
+
+      const questionMap = new Map((section.questions ?? []).map(q => [q._id.toString(), q]));
+
+      let sectionScore = 0;
+
+      sectionAttempt.answers.forEach((answer) => {
+        const qId = answer.questionId.toString();
+        const grade = gradeMap.get(qId);
+        if (grade) {
+          answer.teacherScore = grade.score;
+          answer.teacherFeedback = grade.feedback;
+        }
+
+        if (answer.teacherScore !== undefined) {
+          sectionScore += answer.teacherScore;
+        } else {
+          const question = questionMap.get(qId);
+          if (question && this.isCorrect(question.correctAnswer ?? [], answer.answer ?? [])) {
+            sectionScore += question.point ?? 0;
+          }
+        }
+      });
+
+      sectionAttempt.score = sectionScore;
+    });
+
+    attempt.totalScore = attempt.sectionAttempts.reduce((acc, curr) => acc + (curr.score ?? 0), 0);
+    const attemptDoc = attempt as any;
+    attemptDoc.markModified('sectionAttempts');
+
+    await attempt.save();
+    return attempt;
+  }
+
   async getByExerciseId(exerciseId: string): Promise<ExerciseAttempt[]> {
     const attempts = await this.exerciseAttemptModel
       .find({ exerciseId })

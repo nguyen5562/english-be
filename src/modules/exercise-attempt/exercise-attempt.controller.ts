@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Patch,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -12,6 +13,7 @@ import {
   ExerciseAttemptDto,
   SectionAttemptDto,
 } from './dto/exercise-attempt.dto';
+import { ManualGradeDto } from '../shared/answer/dto/grade.dto';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { Roles } from '../../decorators/role.decorator';
 import { Role } from '../../enums/role.enum';
@@ -45,6 +47,16 @@ export class ExerciseAttemptController {
     @Body(ValidationPipe) sectionDto: SectionAttemptDto,
   ) {
     return this.exerciseAttemptService.submitSection(attemptId, sectionDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  // Maybe requires ADMIN/TEACHER role in real usage
+  @Patch(':id/grade')
+  async manualGrade(
+    @Param('id') id: string,
+    @Body(new ValidationPipe({ transform: true })) dto: ManualGradeDto,
+  ) {
+    return this.exerciseAttemptService.manualGrade(id, dto);
   }
 
   /**
